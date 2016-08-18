@@ -1,0 +1,23 @@
+{
+  "name": "azbbot",
+  "version": "1.0.0",
+  "description": "Playing with Facebook Messenger Bot API",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "lint": "jshint --exclude node_modules .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrey Zubkov",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "config": "^1.20.4",
+    "ejs": "^2.4.2",
+    "express": "^4.13.4",
+    "request": "^2.72.0"
+  },
+  "engines": {
+    "node": "~4.1.2"
+  }
+}
