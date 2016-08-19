@@ -1,9 +1,12 @@
 /**
  * Created by oxymoron on 8/18/16.
  */
+'use strict';
+
+import BotManager from '../bot/BotManager';
 
 var express = require('express'),
-    request = require('request')
+    request = require('request'),
     router = express.Router();
 
 const {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} = require('../constants');
@@ -43,7 +46,10 @@ function receivedMessage(event) {
     console.log("Received message for user %d and page %d at %d with message:", senderID, recipientID, timeOfMessage);
     console.log(JSON.stringify(message));
     var messageText = message.text;
+
     if (messageText) {
+        let botManager = new BotManager();
+        messageText = botManager.reply(senderID);
         sendTextMessage(senderID, messageText);
     }
 }
