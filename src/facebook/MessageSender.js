@@ -3,6 +3,7 @@
  */
 
 import {PAGE_ACCESS_TOKEN} from '../constants';
+import request from 'request';
 
 class MessageSender {
 
