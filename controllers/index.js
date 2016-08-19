@@ -3,6 +3,7 @@
  */
 
 var express = require('express'),
+    request = require('request')
     router = express.Router();
 
 const {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} = require('../constants');
