@@ -4,10 +4,12 @@
 
 'use strict';
 
-export default class BotManager {
+class BotManager {
 
-    reply(senderId){
-        return `Hello, ${senderId}`;
+    processMessage(message){
+        return `Hello, ${message.senderId}, your message was ${message.text}`;
     }
 
 }
+
+export default new BotManager();

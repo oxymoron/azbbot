@@ -4,9 +4,10 @@
 'use strict';
 
 import {Router} from 'express';
-import request from 'request';
-import {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} from '../constants';
+import {VALIDATION_TOKEN} from '../constants';
 import BotManager from '../bot/BotManager';
+import MessageSender from '../facebook/MessageSender';
+import MessageParser from '../facebook/MessageParser';
 
 export let router = Router();
 
@@ -22,72 +23,14 @@ router.get('/webhook', function(req, res) {
 });
 
 router.post('/webhook', function (req, res) {
-    var data = req.body;
-    if (data.object == 'page') {
-        data.entry.forEach(function(pageEntry) {
-            pageEntry.messaging.forEach(function(messagingEvent) {
-                if (messagingEvent.message) {
-                    receivedMessage(messagingEvent);
-                } else {
-                    console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-                }
-            });
-        });
-        res.sendStatus(200);
-    }
+    let messages = MessageParser.parse(req.body);
+    let answers = messages.map(it => BotManager.processMessage(it));
+    answers.forEach(it => MessageSender.sendTextMessage(it));
+    res.sendStatus(200);
 });
 
-function receivedMessage(event) {
-    var senderID = event.sender.id;
-    var recipientID = event.recipient.id;
-    var timeOfMessage = event.timestamp;
-    var message = event.message;
-    console.log("Received message for user %d and page %d at %d with message:", senderID, recipientID, timeOfMessage);
-    console.log(JSON.stringify(message));
-    var messageText = message.text;
 
-    if (messageText) {
-        let botManager = new BotManager();
-        messageText = botManager.reply(senderID);
-        sendTextMessage(senderID, messageText);
-    }
-}
 
-function sendTextMessage(recipientId, messageText) {
-    var messageData = {
-        recipient: {
-            id: recipientId
-        },
-        message: {
-            text: messageText,
-            metadata: "DEVELOPER_DEFINED_METADATA"
-        }
-    };
 
-    callSendAPI(messageData);
-}
 
-function callSendAPI(messageData) {
-    request({
-        uri: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: PAGE_ACCESS_TOKEN},
-        method: 'POST',
-        json: messageData
 
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var recipientId = body.recipient_id;
-            var messageId = body.message_id;
-
-            if (messageId) {
-                console.log("Successfully sent message with id %s to recipient %s",
-                    messageId, recipientId);
-            } else {
-                console.log("Successfully called Send API for recipient %s",
-                    recipientId);
-            }
-        } else {
-            console.error(response.error);
-        }
-    });
-}
