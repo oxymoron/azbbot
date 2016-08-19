@@ -5,7 +5,9 @@ const
   bodyParser = require('body-parser'),
   config = require('config'),
   express = require('express'),
+  crypto = require('crypto'),
   request = require('request');
+const {APP_SECRET, VALIDATION_TOKEN, PAGE_ACCESS_TOKEN, SERVER_URL} = require('./constants');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -14,12 +16,8 @@ app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
 app.use(require('./controllers'));
 
-const APP_SECRET = process.env.MESSENGER_APP_SECRET || config.get('appSecret');
-const MESSENGER_VALIDATION_TOKEN = process.env.MESSENGER_VALIDATION_TOKEN || config.get('validationToken');
-const MESSENGER_PAGE_ACCESS_TOKEN = process.env.MESSENGER_PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
-const SERVER_URL = process.env.SERVER_URL || config.get('serverURL');
 
-if (!(APP_SECRET && MESSENGER_VALIDATION_TOKEN && MESSENGER_PAGE_ACCESS_TOKEN && SERVER_URL)) {
+if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   console.error("Missing config values");
   process.exit(1);
 }

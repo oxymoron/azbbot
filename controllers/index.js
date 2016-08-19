@@ -5,9 +5,11 @@
 var express = require('express'),
     router = express.Router();
 
+const {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} = require('../constants');
+
 router.get('/webhook', function(req, res) {
     if (req.query['hub.mode'] === 'subscribe' &&
-        req.query['hub.verify_token'] === MESSENGER_VALIDATION_TOKEN) {
+        req.query['hub.verify_token'] === VALIDATION_TOKEN) {
         console.log("Validating webhook");
         res.status(200).send(req.query['hub.challenge']);
     } else {
@@ -62,7 +64,7 @@ function sendTextMessage(recipientId, messageText) {
 function callSendAPI(messageData) {
     request({
         uri: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: MESSENGER_PAGE_ACCESS_TOKEN},
+        qs: {access_token: PAGE_ACCESS_TOKEN},
         method: 'POST',
         json: messageData
 
