@@ -4,8 +4,7 @@
   "description": "Playing with Facebook Messenger Bot API",
   "main": "app.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "start": "node lib/app.js",
+    "start": "babel src -d lib && node lib/app.js",
     "lint": "jshint --exclude node_modules .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
