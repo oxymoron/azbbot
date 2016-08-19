@@ -3,13 +3,12 @@
  */
 'use strict';
 
+import {Router} from 'express';
+import request from 'request';
+import {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} from '../constants';
 import BotManager from '../bot/BotManager';
 
-var express = require('express'),
-    request = require('request'),
-    router = express.Router();
-
-const {VALIDATION_TOKEN, PAGE_ACCESS_TOKEN} = require('../constants');
+export let router = Router();
 
 router.get('/webhook', function(req, res) {
     if (req.query['hub.mode'] === 'subscribe' &&
@@ -92,5 +91,3 @@ function callSendAPI(messageData) {
         }
     });
 }
-
-module.exports = router;

@@ -1,20 +1,19 @@
 /* jshint node: true, devel: true */
 'use strict';
 
-const 
-  bodyParser = require('body-parser'),
-  config = require('config'),
-  express = require('express'),
-  crypto = require('crypto'),
-  request = require('request');
-const {APP_SECRET, VALIDATION_TOKEN, PAGE_ACCESS_TOKEN, SERVER_URL} = require('./constants');
 
-var app = express();
+import bodyParser from 'body-parser';
+import express from 'express';
+import crypto from 'crypto';
+import {APP_SECRET, VALIDATION_TOKEN, PAGE_ACCESS_TOKEN, SERVER_URL} from './constants';
+import {router} from './controllers';
+
+let app = express();
+
 app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
-app.use(express.static('public'));
-app.use(require('./controllers'));
+app.use(router);
 
 
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
@@ -39,6 +38,3 @@ function verifyRequestSignature(req, res, buf) {
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-
-module.exports = app;
-
