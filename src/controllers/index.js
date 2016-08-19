@@ -25,7 +25,7 @@ router.get('/webhook', function(req, res) {
 router.post('/webhook', function (req, res) {
     let messages = MessageParser.parse(req.body);
     let answers = messages.map(it => (Object.assign(it, {answer: BotManager.processMessage(it)})));
-    answers.forEach(it => MessageSender.sendTextMessage(it.senderId, it.text));
+    answers.forEach(it => MessageSender.sendTextMessage(it.senderId, it.answer));
     res.sendStatus(200);
 });
 
