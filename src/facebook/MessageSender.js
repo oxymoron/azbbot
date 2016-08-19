@@ -7,13 +7,13 @@ import request from 'request';
 
 class MessageSender {
 
-    sendTextMessage(recipientId, messageText) {
+    sendTextMessage(message) {
         this.sendMessage({
             recipient: {
-                id: recipientId
+                id: message.recipientId
             },
             message: {
-                text: messageText,
+                text: message.answer,
                 metadata: "DEVELOPER_DEFINED_METADATA"
             }
         });

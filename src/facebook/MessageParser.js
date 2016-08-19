@@ -28,7 +28,11 @@ class MessageParser {
         let {message} = event,
             {text} = message;
         if (text) {
-            messages.push({senderId: event.sender.id, text});
+            messages.push({
+                senderId: event.sender.id,
+                recipientId: event.recipient.id,
+                text
+            });
         }
     }
 }
